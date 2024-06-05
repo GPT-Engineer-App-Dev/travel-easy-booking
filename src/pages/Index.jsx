@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Text, VStack, Box, Heading, Button, Image, Input, FormControl, FormLabel, Select, SimpleGrid } from "@chakra-ui/react";
+import { Container, Text, VStack, Box, Heading, Button, Image, Input, FormControl, FormLabel, Select, SimpleGrid, Alert, AlertIcon } from "@chakra-ui/react";
 
 const Index = () => {
   const [departureCity, setDepartureCity] = useState("");
@@ -8,6 +8,8 @@ const Index = () => {
   const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedFlight, setSelectedFlight] = useState(null);
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
   const handleSearch = async () => {
     // Mock API call
@@ -16,6 +18,15 @@ const Index = () => {
       { id: 2, airline: "Airline B", price: "$250", duration: "4h 10m" },
     ];
     setSearchResults(results);
+  };
+
+  const handleSelectFlight = (flight) => {
+    setSelectedFlight(flight);
+  };
+
+  const handleConfirmBooking = () => {
+    // Mock booking confirmation
+    setBookingConfirmed(true);
   };
 
   return (
@@ -60,10 +71,28 @@ const Index = () => {
                   <Text>Airline: {result.airline}</Text>
                   <Text>Price: {result.price}</Text>
                   <Text>Duration: {result.duration}</Text>
+                  <Button mt={2} colorScheme="blue" onClick={() => handleSelectFlight(result)}>Select Flight</Button>
                 </Box>
               ))}
             </SimpleGrid>
           </Box>
+        )}
+        {selectedFlight && (
+          <Box mt={6} width="100%">
+            <Heading as="h2" size="lg" mb={4}>Selected Flight</Heading>
+            <Box p={4} borderWidth="1px" borderRadius="md">
+              <Text>Airline: {selectedFlight.airline}</Text>
+              <Text>Price: {selectedFlight.price}</Text>
+              <Text>Duration: {selectedFlight.duration}</Text>
+              <Button mt={2} colorScheme="green" onClick={handleConfirmBooking}>Confirm Booking</Button>
+            </Box>
+          </Box>
+        )}
+        {bookingConfirmed && (
+          <Alert status="success" mt={6}>
+            <AlertIcon />
+            Booking confirmed! Thank you for choosing our service.
+          </Alert>
         )}
       </VStack>
     </Container>
